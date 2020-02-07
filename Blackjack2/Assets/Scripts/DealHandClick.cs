@@ -31,13 +31,15 @@ public class DealHandClick : MonoBehaviour
         DealCard(ref playerHand);
         DealCard(ref dealerHand);
 
+        DealerTurn();
         print("Dealer Hand: ");
         foreach (string card in dealerHand)
         {
             print(card);
         }
-        DealerTurn();
+        print("Dealer Hand Count: ");
         print(dealerHandCount);
+        print("Player Win: ");
         print(playerWin);
         PutCardsBack();
         print(deck.Count);
@@ -129,6 +131,7 @@ public class DealHandClick : MonoBehaviour
                 dealerHit = false;
                 playerWin = true;
             }
+            position++;
         }
     }
 
