@@ -21,6 +21,7 @@ public class DealHandClick : MonoBehaviour
     private bool playerTurn = true;
     private bool dealerTurn = false;
     private bool dealerHit = false;
+    private bool playerHit = false;
 
     public void OnClickDealHand()
     {
@@ -92,6 +93,21 @@ public class DealHandClick : MonoBehaviour
         }
         playerHand.Clear();
         dealerHand.Clear();
+    }
+
+    private void PlayerTurn()
+    {
+        foreach (string card in playerHand)
+        {
+            playerHandCount += FetchCardValue(card);
+        }
+    }
+
+    private void PlayerHit()
+    {
+        int position = 2;
+
+
     }
 
     private void DealerTurn()
