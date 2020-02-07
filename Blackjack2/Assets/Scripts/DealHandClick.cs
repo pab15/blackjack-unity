@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DealHandClick : MonoBehaviour
-{ 
+{
+    public GameObject hit_B;
+    public GameObject stay_B;
+    public GameObject bet_B;
+    public GameObject bet_I;
+    public GameObject deal_B;
+
     private string[] suits = { "C", "D", "H", "S" };
     private string[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
 
@@ -21,10 +27,21 @@ public class DealHandClick : MonoBehaviour
     private bool playerTurn = true;
     private bool dealerTurn = false;
     private bool dealerHit = false;
-    private bool playerHit = false;
+    public static bool playerHit = false;
+
+    void Start()
+    {
+
+    }
 
     public void OnClickDealHand()
     {
+        hit_B.SetActive(true);
+        stay_B.SetActive(true);
+        bet_B.SetActive(true);
+        bet_I.SetActive(true);
+        deal_B.SetActive(false);
+
         deck = setDeck();
         ShuffleDeck(deck);
         DealCard(ref playerHand);
@@ -32,12 +49,21 @@ public class DealHandClick : MonoBehaviour
         DealCard(ref playerHand);
         DealCard(ref dealerHand);
 
+        if (playerTurn == true)
+            PlayerTurn();
         DealerTurn();
+        print("Player Hand: ");
+        foreach (string card in playerHand)
+        {
+            print(card);
+        }
         print("Dealer Hand: ");
         foreach (string card in dealerHand)
         {
             print(card);
         }
+        print("Player Hand Count: ");
+        print(playerHandCount);
         print("Dealer Hand Count: ");
         print(dealerHandCount);
         print("Player Win: ");
@@ -107,7 +133,17 @@ public class DealHandClick : MonoBehaviour
     {
         int position = 2;
 
-
+        while (playerHit)
+        {
+            DealCard(ref playerHand);
+            playerHandCount += FetchCardValue(playerHand[position]);
+            if (playerHandCount > 21)
+            {
+                playerHit = false;
+                playerWin = true;
+            }
+            position++;
+        }
     }
 
     private void DealerTurn()

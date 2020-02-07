@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class HitP : MonoBehaviour
 {
-    public DealHandClick script;
-
     public void OnClickHit()
     {
-       
+        DealHandClick.playerHit = true;
+        print(DealHandClick.playerHit);
     }
 }
