@@ -13,6 +13,14 @@ public class DealHandClick : MonoBehaviour
 
     private int playerMoney = 20;
     private int dealerMoney = 20;
+    private int playerHandCount = 0;
+    private int dealerHandCount = 0;
+
+    private bool playerWin;
+    private bool tie = false;
+    private bool playerTurn = true;
+    private bool dealerTurn = false;
+    private bool dealerHit = false;
 
     public void OnClickDealHand()
     {
@@ -23,22 +31,20 @@ public class DealHandClick : MonoBehaviour
         DealCard(ref playerHand);
         DealCard(ref dealerHand);
 
-        print("Player Hand: ");
-        foreach (string card in playerHand)
-        {
-            print(card);
-        }
         print("Dealer Hand: ");
         foreach (string card in dealerHand)
         {
             print(card);
         }
+        DealerTurn();
+        print(dealerHandCount);
+        print(playerWin);
         PutCardsBack();
         print(deck.Count);
     }
 
     // From: https://www.youtube.com/watch?v=1Cmb181-quI:
-    public List<string> setDeck()
+    private  List<string> setDeck()
     {
         List<string> result = new List<string>();
         foreach (string suit in suits)
@@ -52,7 +58,7 @@ public class DealHandClick : MonoBehaviour
     }
 
     // From: https://www.youtube.com/watch?v=1Cmb181-quI:
-    void ShuffleDeck<T>(List<T> list)
+    private void ShuffleDeck<T>(List<T> list)
     {
         System.Random random = new System.Random();
         int n = list.Count;
@@ -84,5 +90,79 @@ public class DealHandClick : MonoBehaviour
         }
         playerHand.Clear();
         dealerHand.Clear();
+    }
+
+    private void DealerTurn()
+    {
+        foreach (string card in dealerHand)
+        {
+            dealerHandCount += FetchCardValue(card);
+        }
+
+        if (dealerHandCount < 17)
+        {
+            dealerHit = true;
+            DealerHit();
+        }
+
+        if (playerWin == true)
+            playerWin = true;
+        else if (dealerHandCount > playerHandCount)
+            playerWin = false;
+        else if (dealerHandCount < playerHandCount)
+            playerWin = true;
+        else if (dealerHandCount == playerHandCount)
+            tie = true;
+    }
+
+    private void DealerHit()
+    {
+        int position = 2;
+        while (dealerHit == true)
+        {
+            DealCard(ref dealerHand);
+            dealerHandCount += FetchCardValue(dealerHand[position]);
+            if (dealerHandCount > 17 && dealerHandCount <= 21)
+                dealerHit = false;
+            else if (dealerHandCount > 21)
+            {
+                dealerHit = false;
+                playerWin = true;
+            }
+        }
+    }
+
+    private int FetchCardValue(string card)
+    {
+        string value = card.Substring(1);
+
+        switch (value)
+        {
+            case "2":
+                return 2;
+            case "3":
+                return 3;
+            case "4":
+                return 4;
+            case "5":
+                return 5;
+            case "6":
+                return 6;
+            case "7":
+                return 7;
+            case "8":
+                return 8;
+            case "9":
+                return 9;
+            case "10":
+            case "J":
+            case "Q":
+            case "K":
+                return 10;
+            case "A":
+                return 11;
+            default:
+                return 0;
+        }
     }
 }
