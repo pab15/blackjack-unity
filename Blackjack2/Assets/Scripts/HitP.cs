@@ -6,7 +6,7 @@ public class HitP : MonoBehaviour
 {
     public void OnClickHit()
     {
-        DealHandClick.playerHit = true;
-        print(DealHandClick.playerHit);
+        GameManager.playerHit = true;
+        print(GameManager.playerHit);
     }
 }
