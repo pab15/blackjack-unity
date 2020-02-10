@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     public static GameObject betButton;
     public static GameObject betInput;
     public static GameObject deckInput;
+    public static GameObject cardToCreate;
+    public static GameObject playerSpace;
+    public static GameObject opponentSpace;
 
     public static string[] suits = { "C", "D", "H", "S" };
     public static string[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
@@ -21,8 +24,9 @@ public class GameManager : MonoBehaviour
     public static List<string> playerHand = new List<string>();
     public static List<string> dealerHand = new List<string>();
 
-    public static int playerMoney = 20;
-    public static int dealerMoney = 20;
+    public static int playerBet;
+    public static int playerMoney = 200;
+    public static int dealerMoney = 200;
     public static int playerHandCount = 0;
     public static int dealerHandCount = 0;
 
@@ -45,6 +49,9 @@ public class GameManager : MonoBehaviour
         betButton = GameObject.Find("Bet");
         betInput = GameObject.Find("BetInput");
         deckInput = GameObject.Find("DeckInput");
+        cardToCreate = GameObject.Find("Card");
+        playerSpace = GameObject.Find("PlayerSpace");
+        opponentSpace = GameObject.Find("DealerSpace");
 
         deckSprite.SetActive(false);
         dealButton.SetActive(false);
@@ -90,10 +97,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void DealCard(ref List<string> handToDeal)
+    public static void DealCard(ref List<string> handToDeal, GameObject spaceToDeal)
     {
         handToDeal.Add(deck[0]);
         deck.RemoveAt(0);
+
+        GameObject createdCard = Instantiate(cardToCreate, new Vector3(0, 0, 0), Quaternion.identity);
+        createdCard.transform.SetParent(spaceToDeal.transform, false);
     }
 
     public static void PutCardsBack()
@@ -124,7 +134,7 @@ public class GameManager : MonoBehaviour
 
         while (playerHit)
         {
-            DealCard(ref playerHand);
+            DealCard(ref playerHand, playerSpace);
             playerHandCount += FetchCardValue(playerHand[position]);
             if (playerHandCount > 21)
             {
@@ -163,7 +173,7 @@ public class GameManager : MonoBehaviour
         int position = 2;
         while (dealerHit == true)
         {
-            DealCard(ref dealerHand);
+            DealCard(ref dealerHand, opponentSpace);
             dealerHandCount += FetchCardValue(dealerHand[position]);
             if (dealerHandCount > 17 && dealerHandCount <= 21)
                 dealerHit = false;

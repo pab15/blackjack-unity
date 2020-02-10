@@ -7,6 +7,6 @@ public class BetButton : MonoBehaviour
     public void OnClickBet()
     {
         GameManager.hasBet = true;
-        print(BetInput.playerBet);
+        print(GameManager.playerBet);
     }
 }

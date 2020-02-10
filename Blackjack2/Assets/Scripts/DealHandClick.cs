@@ -14,10 +14,10 @@ public class DealHandClick : MonoBehaviour
 
         GameManager.deck = GameManager.setDeck();
         GameManager.ShuffleDeck(GameManager.deck);
-        GameManager.DealCard(ref GameManager.playerHand);
-        GameManager.DealCard(ref GameManager.dealerHand);
-        GameManager.DealCard(ref GameManager.playerHand);
-        GameManager.DealCard(ref GameManager.dealerHand);
+        GameManager.DealCard(ref GameManager.playerHand, GameManager.playerSpace);
+        GameManager.DealCard(ref GameManager.dealerHand, GameManager.opponentSpace);
+        GameManager.DealCard(ref GameManager.playerHand, GameManager.playerSpace);
+        GameManager.DealCard(ref GameManager.dealerHand, GameManager.opponentSpace);
 
         if (GameManager.playerTurn == true)
             GameManager.PlayerTurn();

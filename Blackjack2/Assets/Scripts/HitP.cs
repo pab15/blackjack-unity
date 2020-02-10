@@ -7,6 +7,7 @@ public class HitP : MonoBehaviour
     public void OnClickHit()
     {
         GameManager.playerHit = true;
+        GameManager.PlayerHit();
         print(GameManager.playerHit);
     }
 }
