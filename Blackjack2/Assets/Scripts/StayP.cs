@@ -6,6 +6,6 @@ public class StayP : MonoBehaviour
 {
     public void OnClickStay()
     {
-
+        GameManager.playerTurn = false;
     }
 }

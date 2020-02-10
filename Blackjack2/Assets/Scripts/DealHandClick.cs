@@ -42,4 +42,9 @@ public class DealHandClick : MonoBehaviour
         print(GameManager.deck.Count);
         print(GameManager.numDecks);
     }
+
+    void Update()
+    {
+        
+    }
 }
