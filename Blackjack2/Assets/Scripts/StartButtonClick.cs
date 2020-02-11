@@ -10,6 +10,5 @@ public class StartButtonClick : MonoBehaviour
         GameManager.deckInput.SetActive(false);
         GameManager.deckSprite.SetActive(true);
         GameManager.dealButton.SetActive(true);
-        print(GameManager.numDecks);
     }
 }

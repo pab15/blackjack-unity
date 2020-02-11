@@ -305,15 +305,14 @@ public class GameManager : MonoBehaviour
         while (playerHit)
         {
             DealCard(ref playerHand, playerSpace);
-            print(playerHand.Count);
             playerHandCount += FetchCardValue(playerHand[position]);
             if (playerHandCount > 21)
             {
                 playerHit = false;
-                playerWin = true;
+                playerWin = false;
             }
             position++;
-            print(playerHandCount);
+            playerHit = false;
         }
     }
 

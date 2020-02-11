@@ -8,6 +8,5 @@ public class HitP : MonoBehaviour
     {
         GameManager.playerHit = true;
         GameManager.PlayerHit();
-        print(GameManager.playerHit);
     }
 }
