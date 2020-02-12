@@ -10,5 +10,8 @@ public class StartButtonClick : MonoBehaviour
         GameManager.deckInput.SetActive(false);
         GameManager.deckSprite.SetActive(true);
         GameManager.dealButton.SetActive(true);
+        GameManager.playerMoneyObj.SetActive(true);
+        GameManager.dealerMoneyObj.SetActive(true);
+        GameManager.poolMoneyObj.SetActive(true);
     }
 }

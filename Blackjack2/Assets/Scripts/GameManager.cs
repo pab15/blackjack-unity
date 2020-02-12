@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -72,6 +73,13 @@ public class GameManager : MonoBehaviour
     public static GameObject cardToCreate;
     public static GameObject playerSpace;
     public static GameObject opponentSpace;
+    public static GameObject playerMoneyObj;
+    public static GameObject dealerMoneyObj;
+    public static GameObject poolMoneyObj;
+    public static GameObject restartButton;
+    public static Text playerMoneyText;
+    public static Text dealerMoneyText;
+    public static Text poolMoneyText;
     public GameObject cardObject;
 
     public static string[] suits = { "C", "D", "H", "S" };
@@ -81,8 +89,10 @@ public class GameManager : MonoBehaviour
     public static List<string> deck;
     public static List<string> playerHand = new List<string>();
     public static List<string> dealerHand = new List<string>();
+    public static List<GameObject> cardsInPlay = new List<GameObject>();
 
-    public static int playerBet;
+    public static int playerBet = 0;
+    public static int betPool = 0;
     public static int playerMoney = 200;
     public static int dealerMoney = 200;
     public static int playerHandCount = 0;
@@ -112,6 +122,17 @@ public class GameManager : MonoBehaviour
         cardToCreate = GameObject.Find("Card");
         playerSpace = GameObject.Find("PlayerSpace");
         opponentSpace = GameObject.Find("DealerSpace");
+        playerMoneyText = GameObject.Find("PlayerMoney").GetComponent<Text>();
+        dealerMoneyText = GameObject.Find("DealerMoney").GetComponent<Text>();
+        poolMoneyText = GameObject.Find("PoolMoney").GetComponent<Text>();
+        poolMoneyObj = GameObject.Find("PoolMoney");
+        dealerMoneyObj = GameObject.Find("DealerMoney");
+        playerMoneyObj = GameObject.Find("PlayerMoney");
+        restartButton = GameObject.Find("NewGame");
+
+        playerMoneyText.text = "Your Money: " + playerMoney;
+        dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+        poolMoneyText.text = "Pool: " + betPool;
 
         deckSprite.SetActive(false);
         dealButton.SetActive(false);
@@ -119,6 +140,10 @@ public class GameManager : MonoBehaviour
         stayButton.SetActive(false);
         betButton.SetActive(false);
         betInput.SetActive(false);
+        playerMoneyObj.SetActive(false);
+        dealerMoneyObj.SetActive(false);
+        poolMoneyObj.SetActive(false);
+        restartButton.SetActive(false);
 
         gameManager = this;
     }
@@ -273,6 +298,8 @@ public class GameManager : MonoBehaviour
         if (cardVal == "SA")
             imageComponent.sprite = gameManager.ace_spade;
 
+        cardsInPlay.Add(createdCard);
+
         deck.RemoveAt(0);
     }
 
@@ -329,14 +356,42 @@ public class GameManager : MonoBehaviour
             DealerHit();
         }
 
-        if (playerWin == true)
-            playerWin = true;
-        else if (dealerHandCount > playerHandCount)
+        if (playerHandCount > 21)
+        {
             playerWin = false;
-        else if (dealerHandCount < playerHandCount)
+            dealerMoney += betPool;
+            betPool = 0;
+            playerMoneyText.text = "Your Money: " + playerMoney;
+            dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+            poolMoneyText.text = "Pool: " + betPool;
+        }
+        else if (playerWin == true)
+        {
             playerWin = true;
-        else if (dealerHandCount == playerHandCount)
-            tie = true;
+            playerMoney += betPool;
+            betPool = 0;
+            playerMoneyText.text = "Your Money: " + playerMoney;
+            dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+            poolMoneyText.text = "Pool: " + betPool;
+        }
+        else if (dealerHandCount > playerHandCount)
+        {
+            playerWin = false;
+            dealerMoney += betPool;
+            betPool = 0;
+            playerMoneyText.text = "Your Money: " + playerMoney;
+            dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+            poolMoneyText.text = "Pool: " + betPool;
+        }
+        else if (dealerHandCount < playerHandCount)
+        {
+            playerWin = true;
+            playerMoney += betPool;
+            betPool = 0;
+            playerMoneyText.text = "Your Money: " + playerMoney;
+            dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+            poolMoneyText.text = "Pool: " + betPool;
+        }
     }
 
     public static void DealerHit()
@@ -389,5 +444,30 @@ public class GameManager : MonoBehaviour
             default:
                 return 0;
         }
+    }
+
+    
+
+    public static void RestartGame()
+    {
+        foreach (GameObject card in cardsInPlay)
+        {
+            Destroy(card);
+        }
+
+        PutCardsBack();
+
+        dealButton.SetActive(true);
+        hitButton.SetActive(false);
+        stayButton.SetActive(false);
+        betButton.SetActive(false);
+        betInput.SetActive(false);
+
+        hasBet = false;
+        playerTurn = true;
+        dealerTurn = false;
+
+        playerHandCount = 0;
+        dealerHandCount = 0;
     }
 }

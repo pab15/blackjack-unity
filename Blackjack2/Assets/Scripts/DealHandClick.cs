@@ -6,8 +6,6 @@ public class DealHandClick : MonoBehaviour
 {
     public void OnClickDealHand()
     {
-        GameManager.hitButton.SetActive(true);
-        GameManager.stayButton.SetActive(true);
         GameManager.betButton.SetActive(true);
         GameManager.betInput.SetActive(true);
         GameManager.dealButton.SetActive(false);

@@ -8,5 +8,13 @@ public class BetButton : MonoBehaviour
     {
         GameManager.hasBet = true;
         print(GameManager.playerBet);
+        GameManager.playerMoney -= GameManager.playerBet;
+        GameManager.betPool = GameManager.playerBet * 2;
+        GameManager.dealerMoney -= GameManager.playerBet;
+        GameManager.playerMoneyText.text = "Your Money: " + GameManager.playerMoney;
+        GameManager.dealerMoneyText.text = "Dealer Money: " + GameManager.dealerMoney;
+        GameManager.poolMoneyText.text = "Pool: " + GameManager.betPool;
+        GameManager.hitButton.SetActive(true);
+        GameManager.stayButton.SetActive(true);
     }
 }

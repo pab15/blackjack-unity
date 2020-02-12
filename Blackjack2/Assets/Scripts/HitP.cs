@@ -6,7 +6,10 @@ public class HitP : MonoBehaviour
 {
     public void OnClickHit()
     {
-        GameManager.playerHit = true;
-        GameManager.PlayerHit();
+        if (GameManager.hasBet == true)
+        {
+            GameManager.playerHit = true;
+            GameManager.PlayerHit();
+        }
     }
 }
