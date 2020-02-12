@@ -8,6 +8,8 @@ public class DealHandClick : MonoBehaviour
     {
         GameManager.betButton.SetActive(true);
         GameManager.betInput.SetActive(true);
+        GameManager.playerHandObj.SetActive(true);
+        GameManager.dealerHandObj.SetActive(true);
         GameManager.dealButton.SetActive(false);
 
         GameManager.deck = GameManager.setDeck();

@@ -76,10 +76,14 @@ public class GameManager : MonoBehaviour
     public static GameObject playerMoneyObj;
     public static GameObject dealerMoneyObj;
     public static GameObject poolMoneyObj;
+    public static GameObject playerHandObj;
+    public static GameObject dealerHandObj;
     public static GameObject restartButton;
     public static Text playerMoneyText;
     public static Text dealerMoneyText;
     public static Text poolMoneyText;
+    public static Text playerHandText;
+    public static Text dealerHandText;
     public GameObject cardObject;
 
     public static string[] suits = { "C", "D", "H", "S" };
@@ -128,6 +132,10 @@ public class GameManager : MonoBehaviour
         poolMoneyObj = GameObject.Find("PoolMoney");
         dealerMoneyObj = GameObject.Find("DealerMoney");
         playerMoneyObj = GameObject.Find("PlayerMoney");
+        playerHandText = GameObject.Find("PlayerCardVals").GetComponent<Text>();
+        dealerHandText = GameObject.Find("DealerCardVals").GetComponent<Text>();
+        playerHandObj = GameObject.Find("PlayerCardVals");
+        dealerHandObj = GameObject.Find("DealerCardVals");
         restartButton = GameObject.Find("NewGame");
 
         playerMoneyText.text = "Your Money: " + playerMoney;
@@ -143,6 +151,8 @@ public class GameManager : MonoBehaviour
         playerMoneyObj.SetActive(false);
         dealerMoneyObj.SetActive(false);
         poolMoneyObj.SetActive(false);
+        playerHandObj.SetActive(false);
+        dealerHandObj.SetActive(false);
         restartButton.SetActive(false);
 
         gameManager = this;
@@ -323,6 +333,7 @@ public class GameManager : MonoBehaviour
         {
             playerHandCount += FetchCardValue(card);
         }
+        playerHandText.text = "Player Hand: " + playerHandCount;
     }
 
     public static void PlayerHit()
@@ -333,6 +344,7 @@ public class GameManager : MonoBehaviour
         {
             DealCard(ref playerHand, playerSpace);
             playerHandCount += FetchCardValue(playerHand[position]);
+            playerHandText.text = "Player Hand: " + playerHandCount;
             if (playerHandCount > 21)
             {
                 playerHit = false;
@@ -349,6 +361,8 @@ public class GameManager : MonoBehaviour
         {
             dealerHandCount += FetchCardValue(card);
         }
+
+        dealerHandText.text = "Dealer Hand: " + dealerHandCount;
 
         if (dealerHandCount < 17)
         {
@@ -401,6 +415,7 @@ public class GameManager : MonoBehaviour
         {
             DealCard(ref dealerHand, opponentSpace);
             dealerHandCount += FetchCardValue(dealerHand[position]);
+            dealerHandText.text = "Dealer Hand: " + dealerHandCount;
             if (dealerHandCount > 17 && dealerHandCount <= 21)
                 dealerHit = false;
             else if (dealerHandCount > 21)
