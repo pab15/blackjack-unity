@@ -7,7 +7,6 @@ public class BetButton : MonoBehaviour
     public void OnClickBet()
     {
         GameManager.hasBet = true;
-        print(GameManager.playerBet);
         GameManager.playerMoney -= GameManager.playerBet;
         GameManager.betPool = GameManager.playerBet * 2;
         GameManager.dealerMoney -= GameManager.playerBet;
@@ -16,5 +15,6 @@ public class BetButton : MonoBehaviour
         GameManager.poolMoneyText.text = "Pool: " + GameManager.betPool;
         GameManager.hitButton.SetActive(true);
         GameManager.stayButton.SetActive(true);
+        GameManager.betButton.SetActive(false);
     }
 }

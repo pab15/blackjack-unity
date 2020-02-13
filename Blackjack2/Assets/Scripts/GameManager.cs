@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
     public static GameObject playerHandObj;
     public static GameObject dealerHandObj;
     public static GameObject restartButton;
+    public static GameObject rageQuitButton;
     public static Text playerMoneyText;
     public static Text dealerMoneyText;
     public static Text poolMoneyText;
@@ -101,6 +102,7 @@ public class GameManager : MonoBehaviour
     public static int dealerMoney = 200;
     public static int playerHandCount = 0;
     public static int dealerHandCount = 0;
+    public static int playerPosition = 2;
 
     public static bool playerWin;
     public static bool hasBet = false;
@@ -109,6 +111,7 @@ public class GameManager : MonoBehaviour
     public static bool dealerTurn = false;
     public static bool dealerHit = false;
     public static bool playerHit = false;
+    public static bool noMoney = false;
 
     public static GameManager gameManager;
 
@@ -137,6 +140,7 @@ public class GameManager : MonoBehaviour
         playerHandObj = GameObject.Find("PlayerCardVals");
         dealerHandObj = GameObject.Find("DealerCardVals");
         restartButton = GameObject.Find("NewGame");
+        rageQuitButton = GameObject.Find("RageQuit");
 
         playerMoneyText.text = "Your Money: " + playerMoney;
         dealerMoneyText.text = "Dealer Money: " + dealerMoney;
@@ -154,6 +158,7 @@ public class GameManager : MonoBehaviour
         playerHandObj.SetActive(false);
         dealerHandObj.SetActive(false);
         restartButton.SetActive(false);
+        rageQuitButton.SetActive(false);
 
         gameManager = this;
     }
@@ -338,20 +343,22 @@ public class GameManager : MonoBehaviour
 
     public static void PlayerHit()
     {
-        int position = 2;
-
         while (playerHit)
         {
             DealCard(ref playerHand, playerSpace);
-            playerHandCount += FetchCardValue(playerHand[position]);
+            playerHandCount += FetchCardValue(playerHand[playerPosition]);
             playerHandText.text = "Player Hand: " + playerHandCount;
             if (playerHandCount > 21)
             {
-                playerHit = false;
                 playerWin = false;
             }
-            position++;
+            playerPosition++;
             playerHit = false;
+            if (playerHandCount > 21)
+            {
+                hitButton.SetActive(false);
+                rageQuitButton.SetActive(true);
+            }
         }
     }
 
@@ -379,7 +386,7 @@ public class GameManager : MonoBehaviour
             dealerMoneyText.text = "Dealer Money: " + dealerMoney;
             poolMoneyText.text = "Pool: " + betPool;
         }
-        else if (playerWin == true)
+        else if (dealerHandCount > 21 && playerHandCount < 21)
         {
             playerWin = true;
             playerMoney += betPool;
@@ -401,6 +408,15 @@ public class GameManager : MonoBehaviour
         {
             playerWin = true;
             playerMoney += betPool;
+            betPool = 0;
+            playerMoneyText.text = "Your Money: " + playerMoney;
+            dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+            poolMoneyText.text = "Pool: " + betPool;
+        }
+        else if (dealerHandCount == playerHandCount)
+        {
+            playerWin = false;
+            dealerMoney += betPool;
             betPool = 0;
             playerMoneyText.text = "Your Money: " + playerMoney;
             dealerMoneyText.text = "Dealer Money: " + dealerMoney;
@@ -465,24 +481,70 @@ public class GameManager : MonoBehaviour
 
     public static void RestartGame()
     {
-        foreach (GameObject card in cardsInPlay)
+        if (noMoney == false)
         {
-            Destroy(card);
+            foreach (GameObject card in cardsInPlay)
+            {
+                Destroy(card);
+            }
+
+            PutCardsBack();
+
+            dealButton.SetActive(true);
+            hitButton.SetActive(false);
+            stayButton.SetActive(false);
+            betButton.SetActive(false);
+            betInput.SetActive(false);
+
+            hasBet = false;
+            playerTurn = true;
+            dealerTurn = false;
+
+            playerHandCount = 0;
+            dealerHandCount = 0;
+            playerHandText.text = "Player Hand: " + playerHandCount;
+            dealerHandText.text = "Dealer Hand: " + dealerHandCount;
         }
+        else
+        {
+            foreach (GameObject card in cardsInPlay)
+            {
+                Destroy(card);
+            }
 
-        PutCardsBack();
+            PutCardsBack();
 
-        dealButton.SetActive(true);
-        hitButton.SetActive(false);
-        stayButton.SetActive(false);
-        betButton.SetActive(false);
-        betInput.SetActive(false);
+            startButton.SetActive(true);
+            deckInput.SetActive(true);
 
-        hasBet = false;
-        playerTurn = true;
-        dealerTurn = false;
+            betInput.SetActive(false);
+            deckSprite.SetActive(false);
+            dealButton.SetActive(false);
+            hitButton.SetActive(false);
+            stayButton.SetActive(false);
+            betButton.SetActive(false);
+            betInput.SetActive(false);
+            playerMoneyObj.SetActive(false);
+            dealerMoneyObj.SetActive(false);
+            poolMoneyObj.SetActive(false);
+            playerHandObj.SetActive(false);
+            dealerHandObj.SetActive(false);
+            restartButton.SetActive(false);
 
-        playerHandCount = 0;
-        dealerHandCount = 0;
+            hasBet = false;
+            playerTurn = true;
+            dealerTurn = false;
+            playerMoney = 200;
+            dealerMoney = 200;
+            noMoney = false;
+
+            playerHandCount = 0;
+            dealerHandCount = 0;
+            playerHandText.text = "Player Hand: " + playerHandCount;
+            dealerHandText.text = "Dealer Hand: " + dealerHandCount;
+            playerMoneyText.text = "Your Money: " + playerMoney;
+            dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+            poolMoneyText.text = "Pool: " + betPool;
+        }
     }
 }
