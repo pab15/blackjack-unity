@@ -16,6 +16,9 @@ public class DealHandClick : MonoBehaviour
         GameManager.ShuffleDeck(GameManager.deck);
         GameManager.DealCard(ref GameManager.playerHand, GameManager.playerSpace);
         GameManager.DealCard(ref GameManager.playerHand, GameManager.playerSpace);
+        GameManager.DealCard(ref GameManager.dealerHand, GameManager.opponentSpace);
+        GameManager.DealFaceDown(GameManager.opponentSpace);
+        //GameManager.DealCard(ref GameManager.dealerHand, GameManager.opponentSpace);
         GameManager.PlayerTurn();
     }
 

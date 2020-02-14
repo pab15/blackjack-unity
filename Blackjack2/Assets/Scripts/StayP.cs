@@ -11,8 +11,6 @@ public class StayP : MonoBehaviour
         {
             GameManager.playerPosition = 2;
             GameManager.playerTurn = false;
-            GameManager.DealCard(ref GameManager.dealerHand, GameManager.opponentSpace);
-            GameManager.DealCard(ref GameManager.dealerHand, GameManager.opponentSpace);
             GameManager.DealerTurn();
             GameManager.restartButton.SetActive(true);
             GameManager.betInput.SetActive(false);

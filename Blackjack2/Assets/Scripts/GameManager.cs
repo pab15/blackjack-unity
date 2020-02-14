@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour
     public Sprite king_spade;
     public Sprite ace_spade;
 
+    public Sprite card_back;
+
     public static GameObject startButton;
     public static GameObject deckSprite;
     public static GameObject dealButton;
@@ -95,6 +97,7 @@ public class GameManager : MonoBehaviour
     public static List<string> playerHand = new List<string>();
     public static List<string> dealerHand = new List<string>();
     public static List<GameObject> cardsInPlay = new List<GameObject>();
+    public static List<GameObject> cardsFaceDown = new List<GameObject>();
 
     public static int playerBet = 0;
     public static int betPool = 0;
@@ -197,6 +200,15 @@ public class GameManager : MonoBehaviour
             list[k] = list[n];
             list[n] = temp;
         }
+    }
+
+    public static void DealFaceDown(GameObject spaceToDeal)
+    {
+        GameObject cardWithBack = Instantiate(cardToCreate, new Vector3(0, 0, 0), Quaternion.identity);
+        cardWithBack.transform.SetParent(spaceToDeal.transform, false);
+        Image imageComponent = cardWithBack.GetComponent<Image>();
+        imageComponent.sprite = gameManager.card_back;
+        cardsFaceDown.Add(cardWithBack);
     }
 
     public static void DealCard(ref List<string> handToDeal, GameObject spaceToDeal)
@@ -339,6 +351,13 @@ public class GameManager : MonoBehaviour
             playerHandCount += FetchCardValue(card);
         }
         playerHandText.text = "Player Hand: " + playerHandCount;
+
+        foreach (string card in dealerHand)
+        {
+            dealerHandCount += FetchCardValue(card);
+        }
+
+        dealerHandText.text = "Dealer Hand: " + dealerHandCount;
     }
 
     public static void PlayerHit()
@@ -346,13 +365,32 @@ public class GameManager : MonoBehaviour
         while (playerHit)
         {
             DealCard(ref playerHand, playerSpace);
-            playerHandCount += FetchCardValue(playerHand[playerPosition]);
+
+            if (FetchCardValue(playerHand[playerPosition]) == 11)
+            {
+                if (playerHandCount + FetchCardValue(playerHand[playerPosition]) > 21)
+                {
+                    playerHandCount += 1;
+                }
+                else
+                {
+                    playerHandCount += FetchCardValue(playerHand[playerPosition]);
+                }
+            }
+            else
+            {
+                playerHandCount += FetchCardValue(playerHand[playerPosition]);
+            }
+            
             playerHandText.text = "Player Hand: " + playerHandCount;
+
             if (playerHandCount > 21)
             {
                 playerWin = false;
             }
+
             playerPosition++;
+
             playerHit = false;
             if (playerHandCount > 21)
             {
@@ -364,11 +402,12 @@ public class GameManager : MonoBehaviour
 
     public static void DealerTurn()
     {
-        foreach (string card in dealerHand)
+        foreach(GameObject card in cardsFaceDown)
         {
-            dealerHandCount += FetchCardValue(card);
+            Destroy(card);
         }
-
+        DealCard(ref dealerHand, opponentSpace);
+        dealerHandCount += FetchCardValue(dealerHand[1]);
         dealerHandText.text = "Dealer Hand: " + dealerHandCount;
 
         if (dealerHandCount < 17)
@@ -430,7 +469,21 @@ public class GameManager : MonoBehaviour
         while (dealerHit == true)
         {
             DealCard(ref dealerHand, opponentSpace);
-            dealerHandCount += FetchCardValue(dealerHand[position]);
+            if (FetchCardValue(dealerHand[position]) == 11)
+            {
+                if (dealerHandCount + FetchCardValue(dealerHand[position]) > 21)
+                {
+                    dealerHandCount += 1;
+                }
+                else
+                {
+                    dealerHandCount += FetchCardValue(dealerHand[position]);
+                }
+            }
+            else
+            {
+                dealerHandCount += FetchCardValue(dealerHand[position]);
+            }
             dealerHandText.text = "Dealer Hand: " + dealerHandCount;
             if (dealerHandCount > 17 && dealerHandCount <= 21)
                 dealerHit = false;
@@ -487,6 +540,15 @@ public class GameManager : MonoBehaviour
             {
                 Destroy(card);
             }
+            foreach (GameObject card in cardsFaceDown)
+            {
+                Destroy(card);
+            }
+            if (dealerMoney <= 0)
+            {
+                dealerMoney = 200;
+                dealerMoneyText.text = "Dealer Money: " + dealerMoney;
+            }
 
             PutCardsBack();
 
@@ -511,6 +573,12 @@ public class GameManager : MonoBehaviour
             {
                 Destroy(card);
             }
+            foreach (GameObject card in cardsFaceDown)
+            {
+                Destroy(card);
+            }
+
+            cardsInPlay.Clear();
 
             PutCardsBack();
 
